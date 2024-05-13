@@ -1,0 +1,71 @@
+version: "3.5"
+
+
+services:
+  nginx:
+    depends_on:
+      - wordpress
+    container_name: nginx
+    build: ./requirements/nginx
+    image: ng-image
+    ports:
+     - "443:443"
+    # environment:
+    #   WORDPRESS_DB_HOST: localhost
+    #   WORDPRESS_DB_NAME: db
+    #   WORDPRESS_DB_USER: mourad
+    #   WORDPRESS_DB_PASSWORD: 123
+    volumes:
+     - wordpress:/var/www/html
+    networks:
+      - inception
+    restart: always
+  wordpress:
+    depends_on:
+      - mariadb
+    container_name: wordpress
+    build: ./requirements/wordpress
+    ports:
+     - "9000:9000"                                                
+    image: wp-image
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - inception
+    restart: always
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    ports:
+     - "3306:3306"
+    image: mdb-image
+    # environment:
+    #   MYSQL_DATABASE: db
+    #   MYSQL_USER: mourad
+    #   MYSQL_PASSWORD: 123
+    #   MYSQL_ROOT_PASSWORD: 123
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - inception
+    restart: always
+
+volumes:
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      device: /home/mdenguir/Desktop/volumes/wp
+      o: bind
+      type: none
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      device: /home/mdenguir/Desktop/volumes/mdb
+      o: bind
+      type: none
+
+networks:
+  inception:
+    name: inception
