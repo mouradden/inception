@@ -1,15 +1,61 @@
-FROM alpine:3.18
+# FROM alpine:3.18
 
-RUN apk update && apk add mariadb mariadb-client
+# RUN apk update && apk add mariadb mariadb-client
 
-RUN mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql
+# # RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
+# # RUN mkdir -p /var/lib/mysql && chown -R mysql:mysql /var/lib/mysql
 
-RUN chmod +x /var/lib/mysql/
+# # RUN mariadb-install-db --user=mysql --datadir=/var/lib/mysql --skip-test-db
+
+# # EXPOSE 3306
+
+# # COPY ./tools/start.sh /
+
+# # RUN chmod +x /start.sh
+
+
+# # ENTRYPOINT ["/start.sh"]
+
+# # CMD ["mariadbd", "--user=mysql", "--bind-address=0.0.0.0"]
+
+# # FROM debian:bookworm
+
+# # RUN apt update && apt install mariadb-server -y
+
+# # Set permissions on directories
+# RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
+# RUN mkdir -p /var/lib/mysql && chown -R mysql:mysql /var/lib/mysql
+
+# # Install MariaDB
+# RUN mariadb-install-db --user=mysql --datadir=/var/lib/mysql --skip-test-db
+
+# EXPOSE 3306
+
+
+# COPY ./tools/start.sh /
+
+# RUN chmod +x /start.sh
+
+# ENTRYPOINT ["sh", "/start.sh"]
+
+# CMD ["mariadbd", "--user=mysql", "--bind-address=0.0.0.0"]
+
+FROM debian:bookworm
+
+RUN  apt update && apt upgrade && apt install mariadb-server -y
+
+# Set permissions on directories
+RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
+RUN mkdir -p /var/lib/mysql && chown -R mysql:mysql /var/lib/mysql
+
+# Install MariaDB
+RUN mariadb-install-db --user=mysql --datadir=/var/lib/mysql --skip-test-db
 
 EXPOSE 3306
 
-COPY ./tools/start.sh /
 
-RUN chmod +x /start.sh
+COPY ./tools/start.sh /start.sh
 
-CMD ["/start.sh"]
+ENTRYPOINT ["sh", "/start.sh"]
+
+CMD ["mariadbd", "--user=mysql", "--bind-address=0.0.0.0"]

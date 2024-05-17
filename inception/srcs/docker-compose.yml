@@ -24,9 +24,7 @@ services:
     depends_on:
       - mariadb
     container_name: wordpress
-    build: ./requirements/wordpress
-    ports:
-     - "9000:9000"                                                
+    build: ./requirements/wordpress                                             
     image: wp-image
     volumes:
       - wordpress:/var/www/html
@@ -36,8 +34,6 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    ports:
-     - "3306:3306"
     image: mdb-image
     # environment:
     #   MYSQL_DATABASE: db
