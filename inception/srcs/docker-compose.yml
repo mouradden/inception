@@ -10,15 +10,14 @@ services:
     image: ng-image
     ports:
      - "443:443"
-    # environment:
-    #   WORDPRESS_DB_HOST: localhost
-    #   WORDPRESS_DB_NAME: db
-    #   WORDPRESS_DB_USER: mourad
-    #   WORDPRESS_DB_PASSWORD: 123
     volumes:
-     - wordpress:/var/www/html
+      - wordpress:/var/www/html 
     networks:
       - inception
+    env_file:
+      - .env
+    secrets:
+      - wp_user_passwd
     restart: always
   wordpress:
     depends_on:
@@ -30,20 +29,23 @@ services:
       - wordpress:/var/www/html
     networks:
       - inception
+    env_file:
+      - .env
+    secrets:
+      - wp_user_passwd
     restart: always
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
     image: mdb-image
-    # environment:
-    #   MYSQL_DATABASE: db
-    #   MYSQL_USER: mourad
-    #   MYSQL_PASSWORD: 123
-    #   MYSQL_ROOT_PASSWORD: 123
     volumes:
       - mariadb:/var/lib/mysql
     networks:
       - inception
+    env_file:
+      - .env
+    secrets:
+      - wp_user_passwd
     restart: always
 
 volumes:
@@ -51,17 +53,21 @@ volumes:
     name: wordpress
     driver: local
     driver_opts:
-      device: /home/mdenguir/Desktop/volumes/wp
+      device:  /home/${USER}/data/wp
       o: bind
       type: none
   mariadb:
     name: mariadb
     driver: local
     driver_opts:
-      device: /home/mdenguir/Desktop/volumes/mdb
+      device: /home/${USER}/data/db
       o: bind
       type: none
 
 networks:
   inception:
     name: inception
+
+secrets:
+   wp_user_passwd:
+     file: wp_user_passwd.txt
