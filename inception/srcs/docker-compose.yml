@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.9"
 
 
 services:
@@ -7,24 +7,22 @@ services:
       - wordpress
     container_name: nginx
     build: ./requirements/nginx
-    image: ng-image
+    image: nginx
     ports:
      - "443:443"
     volumes:
-      - wordpress:/var/www/html 
+      - wordpress:/var/www/html
     networks:
       - inception
     env_file:
       - .env
-    secrets:
-      - wp_user_passwd
     restart: always
   wordpress:
     depends_on:
       - mariadb
     container_name: wordpress
-    build: ./requirements/wordpress                                             
-    image: wp-image
+    build: ./requirements/wordpress                                    
+    image: wordpress
     volumes:
       - wordpress:/var/www/html
     networks:
@@ -32,12 +30,14 @@ services:
     env_file:
       - .env
     secrets:
+      - wp_admin_passwd
       - wp_user_passwd
+      - db_user_passwd
     restart: always
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    image: mdb-image
+    image: mariadb
     volumes:
       - mariadb:/var/lib/mysql
     networks:
@@ -45,7 +45,8 @@ services:
     env_file:
       - .env
     secrets:
-      - wp_user_passwd
+      - db_root_passwd
+      - db_user_passwd
     restart: always
 
 volumes:
@@ -67,7 +68,14 @@ volumes:
 networks:
   inception:
     name: inception
+    driver: bridge
 
 secrets:
-   wp_user_passwd:
-     file: wp_user_passwd.txt
+  wp_user_passwd:
+    file: ../secrets/wp_user_passwd.txt
+  wp_admin_passwd:
+    file: ../secrets/wp_admin_passwd.txt
+  db_root_passwd:
+    file : ../secrets/db_root_passwd.txt
+  db_user_passwd:
+    file: ../secrets/db_user_passwd.txt

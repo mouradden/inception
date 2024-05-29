@@ -7,13 +7,12 @@ RUN apk update && \
     php81-mysqli \
     php81-curl \
     php81-phar \
-    curl \
     php81-mbstring \
+    curl \
     postfix
 
 
 COPY tools/start.sh /
-COPY tools/wp-config.php /
 
 EXPOSE 9000
 

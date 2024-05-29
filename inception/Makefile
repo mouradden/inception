@@ -1,14 +1,11 @@
-
-NAME = inception
-
 all: init
-	docker-compose -p ${NAME} -f srcs/docker-compose.yml up
+	docker-compose -f srcs/docker-compose.yml up --build
 
 init:
 	sh srcs/requirements/tools/init.sh
 
 clean:
-	docker-compose -p ${NAME} -f srcs/docker-compose.yml down -v
+	docker-compose -f srcs/docker-compose.yml down -v
 
 fclean: clean
 	sudo rm -rf /home/${USER}/data
@@ -17,3 +14,4 @@ fclean: clean
 re: all
 
 .PHONY: all clean fclean re
+
