@@ -11,8 +11,8 @@ CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED by '${DB_USER_PASSWD}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
 FLUSH PRIVILEGES;" > init.sql
 
-mariadbd --user=mysql --bootstrap < /init.sql
+mariadbd --user=mysql  --bootstrap < /init.sql
 
 rm -f /init.sql
-
+# mariadbd --user=mysql --bind-address=0.0.0.0
 exec "$@"

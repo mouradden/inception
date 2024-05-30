@@ -11,7 +11,10 @@ fclean: clean
 	sudo rm -rf /home/${USER}/data
 	docker system prune -af
 
-re: all
+cleanVolumes :
+	sudo rm -rf /home/${USER}/data
+
+re: fclean all
 
 .PHONY: all clean fclean re
 
